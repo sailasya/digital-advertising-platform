@@ -1,4 +1,4 @@
-# digital-advertising-platform
+# Digital Advertising Platform
 
 Technologies used:
 
