@@ -7,6 +7,8 @@ Backend-php
 Database-mysql
 Server-apache
 
+Project workflow :
+
 The application starts with index.html which is the login page. The traveller enters his firstname, lastname, pnr number
 and frequent flyer number(if exists) and logins into the application.
 In the main page, there are four different sections i.e. order food, destination, kids section and news in which we have
