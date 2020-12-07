@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sign In Form</title>
+<link rel="icon" href="img/logo.jpg">
+    <!-- Font Icon -->
+
+   
+    <link rel="stylesheet" href="fonts/material-icon/css/material-design-iconic-font.min.css">
+
+    <!-- Main css -->
+    <link rel="stylesheet" href="css/style.css">
+    <style type="text/css">
+      #submit{
+        margin-top:100px;margin-left:10%;background-color:#02718d;opacity:0.7;
+      }
+      #submit:hover{
+        opacity: 1;
+      }
+      #a{
+        background-image: url("images/BG.jpg");
+      }
+      #skip{
+        margin-top:px;margin-left:25%;background-color:#02718d;opacity:0.7;
+      }
+      #skip:hover{
+        opacity: 1;
+      }
+      .inputtag{
+        color:black;
+      }
+
+
+        
+     </style>
+    
+</head>
+<body onload="deleteAllCookies()" id="a">
+
+    <div class="main" >
+
+        <div class="container" >
+            <div class="booking-content">
+                <div class="booking-image">
+                    <img class="booking-img" src="images/form-img.jpg" alt="Booking Image">
+                </div>
+                <div class="booking-form"style="background-color: white;">
+                    <form id="booking-form" method="GET" action="signup.php">
+                        <img src="images/Icon.jpg" style="margin-left:40%;margin-top:15%">
+                        <h2 style="color:#02718d;font-family: helvetica,font-size:30px;">One Account.Every Airport.</h2>
+                        <div class="form-group form-input">
+                            <input type="text" name="name" id="name" value="" class="inputtag"required/>
+                            <label for="name" class="form-label">First Name</label>
+                        </div>
+                        <div class="form-group form-input">
+                            <input type="text" name="last name" id="lastname" class="inputtag" value="" required />
+                            <label for="phone" class="form-label">Last Name</label>
+                        </div>
+                        <div class="form-group form-input">
+                            <input type="number" name="phone" id="phone" class="inputtag" value="" required />
+                            <label for="phone" class="form-label">PNR Number</label>
+                        </div>
+                        <div class="form-group form-input">
+                            <input type="number" name="flyerno" id="flyerno" class="inputtag" value="" placeholder="Frequent Flyer Number(optional)" />
+                            
+                        </div>
+                        <span>
+                        <div>
+                        <input type="submit" value="Sign In" class="submit" id="submit" name="submit"  />
+                        </div>
+                        
+                       </span>
+
+                        
+                        
+                          
+                        
+                    </form>
+
+                </div>
+            </div>
+
+    </div>
+
+    <!-- JS -->
+    <script src="vendor/jquery/jquery.min.js">
+        
+    </script>
+    <script type="text/javascript">
+        function deleteAllCookies() {
+    var cookies = document.cookie.split(";");
+
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i];
+        var eqPos = cookie.indexOf("=");
+        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    }
+}
+    </script>
+    <script src="js/main.js"></script>
+</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+</html>

@@ -1,0 +1,28 @@
+(function ($) {
+    'use strict';
+
+    Drupal.behaviors.KfcCategoryMenu = {
+        attach: function (context, settings) {
+            var path = $.cookie('menucategory');
+            var savedstoreid = (typeof $.cookie('savedstoreid') != "undefined") ? $.cookie('savedstoreid') : 0;
+            if (typeof path == 'undefined' || path != '/one') {
+              path = '/sharing';
+            }
+            $.ajax({
+              url: '/ajax/menu/category'+ path +'/'+savedstoreid,
+              dataType: 'json',
+              success: function(json) {
+                $('h4.category-name').text(json.title);
+                if ($('.menu-category-menu-list').find('li').length < 1) {
+                  for (var key in json.data) {
+                    if (json.data.hasOwnProperty(key)) {
+                      $('.menu-category-menu-list').append('<li class="menu-category-menu-item"><a href="'+json.data[key].url+'" hreflang="en">'+json.data[key].name+'</a></li>')
+                    }
+                  }
+                }
+              }
+            });
+        }
+    };
+
+})(jQuery);

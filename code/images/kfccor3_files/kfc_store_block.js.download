@@ -1,0 +1,116 @@
+(function ($) {
+    'use strict';
+
+    Drupal.behaviors.KfcStoreBlock = {
+        attach: function (context, settings) {
+            // Trigger geolocation request.
+            $(document).once('click-event').on('click', '.btn-use-location', function (e) {
+                if (geo_position_js.init()) {
+                    geo_position_js.getCurrentPosition(function (position) {
+                        // Store in cookie and redirect to find a store.
+                        var userLocation = [position.coords.latitude, position.coords.longitude];
+                        
+                        // Debug Data
+                        // var userLocation = [-33.896550,151.219980];
+                        
+                        $.cookie('userLocation', userLocation, { expires: 7, path: '/', secure: Drupal.behaviors.KFC.getCookieSecureType() });
+
+                        // Manage if it is find store for pick up store 
+                        var isPickUpStorePage = (Drupal.behaviors.KFC.getParameterByName('option') == 'catering') ? true : false;
+                        var urlFindStore      = (isPickUpStorePage) ? '/find-store?option=catering' : '/find-store';
+
+                        // IF lightbox has class "journey-2" means map should open in lightbox
+                        if ($(this).parents('.journey-2').length) {
+                          if ($(this).parents('.option-catering').length) {
+                            urlFindStore = '/find-store?option=catering';
+                          }
+                          urlFindStore = urlFindStore.replace('find-store', 'find-store-iframe');
+
+                          setTimeout(function(){
+                            $('#modalStoreFinder').addClass('load-map-in-iframe');
+                            if ($('#modalStoreFinder .modal-body .find-store-iframe').length < 1) {
+                              $('#modalStoreFinder').find('.modal-body').append('<iframe class="find-store-iframe" width="100%" src="'+urlFindStore+'" frameborder="0" allowfullscreen="" height="700"></iframe>');
+                            }
+                            $('.modal:visible').each(Drupal.behaviors.KFC.centerModal);
+                          }, 500);
+                        } else {
+                          window.location.href = urlFindStore;
+                        }
+                    }, function (error) {
+                        console.log(error);
+
+                        if (error.code == 1) {
+                          $('#edit-kfc-store-finder .finder-mobile').addClass('hide');
+                          $('#edit-kfc-store-finder .block-geolocation-warning').removeClass('hide');
+                          
+                          if ($('#modalStartOrder').is(':visible')) {
+                            $('#modalStartOrder .block-geolocation-warning').removeClass('hide');
+
+                            setTimeout(function() {
+                              $('#modalStartOrder .block-geolocation-warning').addClass('hide');
+                            }, 5000);
+                          }
+                        }
+                    });
+                }
+                
+                return false;
+            });
+
+            $("#edit-finder-address").once('keyup-event').keyup(function(event) {
+                if (event.keyCode === 13) {
+                  $('.btn-find-store').trigger('click');
+                }
+            });
+            
+            // Trigger button go.
+            $('.btn-find-store').once('click-event').click(function() {
+                var address = $('#modalStoreFinder .kfc-store-finder-ajax').val();
+                var $this = $(this);
+                if (address != '') {
+                   // Get coordinate from google address geocode.
+                   var uri = 'https://maps.googleapis.com/maps/api/geocode/json?components=country:AU&sensor=false&address=' + address;
+                   $.getJSON(uri, function(data) {
+                     if (data.status == "OK") {
+                        var location = data.results[0].geometry.location;
+                        var userLocation = [location.lat, location.lng];                      
+                        $.cookie('userLocation', userLocation, { expires: 7, path: '/', secure: Drupal.behaviors.KFC.getCookieSecureType() });
+                        $.cookie('userLocationAddress', address, { expires: 7, path: '/', secure: Drupal.behaviors.KFC.getCookieSecureType() });
+                        
+                        // Manage if it is find store for pick up store 
+                        var isPickUpStorePage = (Drupal.behaviors.KFC.getParameterByName('option') == 'catering') ? true : false;
+                        var urlFindStore      = (isPickUpStorePage) ? '/find-store?option=catering' : '/find-store';
+
+                        // IF lightbox has class "journey-2" means map should open in lightbox
+                        if ($this.parents('.journey-2').length) {
+                          if ($this.parents('.option-catering').length) {
+                            urlFindStore = '/find-store?option=catering';
+                          }
+                          urlFindStore = urlFindStore.replace('find-store', 'find-store-iframe');
+                          setTimeout(function(){
+                            $('#modalStoreFinder').addClass('load-map-in-iframe');
+                            if ($('#modalStoreFinder .modal-body .find-store-iframe').length < 1) {
+                              $('#modalStoreFinder').find('.modal-body').append('<iframe class="find-store-iframe" width="100%" src="'+urlFindStore+'" frameborder="0" allowfullscreen="" height="700"></iframe>');
+                            }
+                            $('.modal:visible').each(Drupal.behaviors.KFC.centerModal);
+                          }, 500);
+                        } else {
+                          window.location.href = urlFindStore;
+                        }
+                     }
+                   }); 
+                }
+                return false;
+            });
+
+            // Init predictive suggestion input 
+            var options = {
+                types: ['(regions)'], //(regions)
+                componentRestrictions: {country: 'au'}
+            };
+
+            
+        }
+    };
+
+})(jQuery);

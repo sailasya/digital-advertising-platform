@@ -1,0 +1,84 @@
+(function ($) {
+    'use strict';
+
+    Drupal.behaviors.KfcCategoryProducts = {
+        attach: function (context, settings) {
+            var path = drupalSettings.path.currentPath;
+            if (path !== '') {
+                var menucategory = $.cookie('menucategory');
+                if (typeof menucategory == 'undefined' || menucategory != '/one') {
+                  menucategory = 'sharing';
+                } else {
+                  menucategory = 'one';
+                }
+                var currentPath = path.split("/");
+                var savedstoreid = (typeof $.cookie('savedstoreid') != "undefined") ? $.cookie('savedstoreid') : 0;
+                $.ajax({
+                  url: '/ajax/menu/category/product/'+ currentPath[1] + '/' + savedstoreid + '/' + menucategory,
+                  dataType: 'json',
+                  success: function(result) {
+                    var json = result.products;
+                    if ($('.product-list-item-wrapper').find('li').length < 1) {
+                      for (var key in json) {
+                        if (json.hasOwnProperty(key)) {
+                          var summary = '&nbsp;';
+                          if (json[key].salesitems.product_summary != null) {
+                            summary = json[key].salesitems.product_summary;
+                          }
+                          var html = '<li class="product-list-item" data-product-id="'+ json[key].product_id +'">';
+                              html += '<div class="product-image"><a href="'+  json[key].product_url +'"><img data-src="'+ json[key].product_image.image_thumb +'" alt="'+ json[key].product_name +'"/></a></div>';
+                              html += '<div class="product-item-title"><a href="'+  json[key].product_url +'">'+ json[key].product_name +'</a></div>';                            
+                              if(json[key].salesitems.product_price && savedstoreid) {
+                                 html += '<div class="product-item-price">$'+ json[key].salesitems.product_price +'</div>';
+                              }
+                              if(json[key].salesitems.product_kj) {
+                                 html += '<div class="product-item-kj">'+ json[key].salesitems.product_kj +'KJ</div>'; 
+                              }
+                              html += '<div class="product-item-desc">'+ summary +'</div>'
+                              html += '</li>';
+                          $('.product-list-item-wrapper').append(html);
+                        }
+                      }
+                    }
+                    $('.product-list-item-wrapper .product-image img').once('loaded-image').each(function() {
+                      $(this).load(function() {
+                        if ($(this).data('src').indexOf('placeholder.png') < 0) {
+                          setTimeout(function() {          
+                            $.fn.matchHeight._update();
+                          }, 200);
+                        }
+                      }).attr('src', $(this).data('src'));
+                    });
+                    //if empty
+                    if(json.length<1 && $('.product-list-item-wrapper').find('li').length < 1){
+                                $('.product-list-item-wrapper').append('<li class="empty">Products unavailable</li>');
+                    }
+
+                    setTimeout(function(){          
+                      //eq heigth row
+                      $('.product-list-item .product-item-title').matchHeight({
+                        byRow: true,
+                        property: 'height',
+                        target: null,
+                        remove: false
+                      });
+                    }, 700);
+                    setTimeout(function(){          
+                      //eq heigth row
+                      $('.product-list-item').matchHeight({
+                        byRow: true,
+                        property: 'height',
+                        target: null,
+                        remove: false
+                      });
+                    }, 1000);
+                  }
+                });
+            
+            }
+        }
+    };
+
+})(jQuery);
+
+
