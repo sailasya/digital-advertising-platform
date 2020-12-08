@@ -1,11 +1,11 @@
 # Digital Advertising Platform
 
-Technologies used:
+**Technologies used:**
 
-Frontend-html,css,bootstrap,javascript
-Backend-php
-Database-mysql
-Server-apache
+_Frontend_- HTML, CSS, Bootstrap, Javascript
+_Backend_- PHP, Objective-C
+_Database_-Mysql
+_Server_- Apache
 
 Project workflow :
 
