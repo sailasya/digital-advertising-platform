@@ -22,7 +22,6 @@ implemented the first three sections.
 
 2. _Kids Section_: It includes a game "TIC-TAC-TOE" which is fun to play.
 
-3. _Destination_: This section covers the information about the destination such as climate, hotels, events, famous eateries,
-                night life, activities, Government tourism but they are not yet implemented.
-
+3. _Destination_: It includes information about the destination, including,  climate, hotels, events, famous eateries,
+                night life, activities, government tourism.
 4. _News_: This section will get redirected to a news website.
